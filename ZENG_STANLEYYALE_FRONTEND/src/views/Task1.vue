@@ -59,106 +59,106 @@ FILE STRUCTURE (this is a single-file component)
 -->
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed } from "vue";
 
 // TODO 1: Create a ref for the text input value (initial value: '')
-const newTaskName = ref('')
+const newTaskName = ref("");
 
 // TODO 2: Create a ref for the tasks array (initial value: [])
-type Priority = 'low' | 'medium' | 'high' | 'none'
+type Priority = "low" | "medium" | "high" | "none";
 
 interface Task {
-  id: string
-  name: string
-  done: boolean
-  priority: Priority
+  id: string;
+  name: string;
+  done: boolean;
+  priority: Priority;
 }
 
-const tasks = ref<Task[]>([])
+const tasks = ref<Task[]>([]);
 
 // TODO 3: Create computed() values for total, done, and pending counts
-const totalCount  = computed(() => {
-    return tasks.value.length
-})
+const totalCount = computed(() => {
+  return tasks.value.length;
+});
 
-const doneCount   = computed(() => {
-    return getTaskCounts().doneCount
-})
+const doneCount = computed(() => {
+  return getTaskCounts().doneCount;
+});
 const pendingCount = computed(() => {
-    return getTaskCounts().pendingCount
-})
+  return getTaskCounts().pendingCount;
+});
 
 // === Extended ===
 // Filtering
-type Filter = 'all' | 'done' | 'pending'
+type Filter = "all" | "done" | "pending";
 
-const activeFilter = ref<Filter>('all')
+const activeFilter = ref<Filter>("all");
 
 const filteredTasks = computed(() => {
-    return getFilteredTasks()
-})
+  return getFilteredTasks();
+});
 
 // Priority filtering
-type PriorityFilter = 'all' | 'low' | 'medium' | 'high' | 'none'
+type PriorityFilter = "all" | "low" | "medium" | "high" | "none";
 
-const selectedPriorityFilter = ref<PriorityFilter>('all')
+const selectedPriorityFilter = ref<PriorityFilter>("all");
 
-const newTaskPriority = ref<Priority>('none')
+const newTaskPriority = ref<Priority>("none");
 
 // Helper function to get task counts
 function getTaskCounts() {
-    const totalCount : number = tasks.value.length;
-    let doneCnt : number = 0
-    for (const task of tasks.value) {
-        if (task.done) {
-            doneCnt++
-        }
+  const totalCount: number = tasks.value.length;
+  let doneCnt: number = 0;
+  for (const task of tasks.value) {
+    if (task.done) {
+      doneCnt++;
     }
+  }
 
-    return {
-        totalCount: totalCount,
-        doneCount: doneCnt,
-        pendingCount: (totalCount - doneCnt)
-    }
+  return {
+    totalCount: totalCount,
+    doneCount: doneCnt,
+    pendingCount: totalCount - doneCnt,
+  };
 }
 
 // Function to change filter state
-function setFilter(filter : Filter) {
-    activeFilter.value = filter
+function setFilter(filter: Filter) {
+  activeFilter.value = filter;
 }
 
 // Function to filter task, in terms of status and priority
-function getFilteredTasks() : Task[] {
-    let filtered: Task[] = []
+function getFilteredTasks(): Task[] {
+  let filtered: Task[] = [];
 
-    switch (activeFilter.value) {
-      case 'done': 
-        filtered = tasks.value.filter(task => task.done)
-        break
-      case 'pending': 
-        filtered = tasks.value.filter(task => !task.done)
-        break
-      default: 
-        filtered = tasks.value
-    }
+  switch (activeFilter.value) {
+    case "done":
+      filtered = tasks.value.filter((task) => task.done);
+      break;
+    case "pending":
+      filtered = tasks.value.filter((task) => !task.done);
+      break;
+    default:
+      filtered = tasks.value;
+  }
 
-    switch (selectedPriorityFilter.value) {
-      case 'low':
-        filtered = tasks.value.filter(task => task.priority === 'low')
-        break
-      case 'medium':
-        filtered = tasks.value.filter(task => task.priority === 'medium')
-        break
-      case 'high':
-        filtered = tasks.value.filter(task => task.priority === 'high')
-        break
-      case 'none':
-        filtered = tasks.value.filter(task => task.priority === 'none')
-        break
-        // default: no filtering needed
-    }
+  switch (selectedPriorityFilter.value) {
+    case "low":
+      filtered = tasks.value.filter((task) => task.priority === "low");
+      break;
+    case "medium":
+      filtered = tasks.value.filter((task) => task.priority === "medium");
+      break;
+    case "high":
+      filtered = tasks.value.filter((task) => task.priority === "high");
+      break;
+    case "none":
+      filtered = tasks.value.filter((task) => task.priority === "none");
+      break;
+    // default: no filtering needed
+  }
 
-    return filtered
+  return filtered;
 }
 
 // TODO 4: Write the addTask() function
@@ -166,45 +166,45 @@ function getFilteredTasks() : Task[] {
 // - Push a new task object to tasks.value: { id, name, done }
 // - Clear the input
 function addTask() {
-    // Prevent empty tasks
-    if (newTaskName.value.trim().length == 0) {
-      // TODO: Warnings
-      return
-    }
+  // Prevent empty tasks
+  if (newTaskName.value.trim().length == 0) {
+    // TODO: Warnings
+    return;
+  }
 
-    // Create and push new task
-    const newTask = {
-      id: crypto.randomUUID(),
-      name: newTaskName.value.trim(),
-      done: false,
-      priority: newTaskPriority.value
-    }
+  // Create and push new task
+  const newTask = {
+    id: crypto.randomUUID(),
+    name: newTaskName.value.trim(),
+    done: false,
+    priority: newTaskPriority.value,
+  };
 
-    tasks.value.push(newTask)
+  tasks.value.push(newTask);
 
-    // Clear input
-    newTaskName.value = '';
+  // Clear input
+  newTaskName.value = "";
 }
 
 // TODO 5: Write toggleTask(id) — flip task.done for the matching task
 function toggleTask(id: string) {
-    const task = tasks.value.find(task => task.id === id)
-    if (!task) {
-      // TODO: Warnings / throw
-      return
-    }
+  const task = tasks.value.find((task) => task.id === id);
+  if (!task) {
+    // TODO: Warnings / throw
+    return;
+  }
 
-    task.done = !task.done
+  task.done = !task.done;
 }
 
 // TODO 6: Write removeTask(id) — filter out the task with this id
 function removeTask(id: string) {
-    tasks.value = tasks.value.filter(task => task.id !== id)
+  tasks.value = tasks.value.filter((task) => task.id !== id);
 }
 
 // Clear all done function
 function clearAllDone() {
-  tasks.value = tasks.value.filter(task => !task.done)
+  tasks.value = tasks.value.filter((task) => !task.done);
 }
 </script>
 
@@ -216,7 +216,13 @@ function clearAllDone() {
     <!-- TODO 8: Add an "Add Task" button with @click="addTask" -->
     <div class="input-row">
       <!-- your input and button here -->
-      <input id="new-task-name-field" type="text" v-model="newTaskName" @keyup.enter="addTask" placeholder="Enter a new task name">
+      <input
+        id="new-task-name-field"
+        type="text"
+        v-model="newTaskName"
+        @keyup.enter="addTask"
+        placeholder="Enter a new task name"
+      />
 
       <label class="field-label" for="new-priority-select">Priority: </label>
       <select id="new-priority-select" v-model="newTaskPriority">
@@ -232,25 +238,36 @@ function clearAllDone() {
     <!-- TODO 9: Display the stats bar using your computed values -->
     <!-- Format: Total: X | Done: X | Pending: X -->
     <div class="stats">
-      Total: {{ totalCount }} | Done: {{ doneCount }} | Pending: {{ pendingCount }}
+      Total: {{ totalCount }} | Done: {{ doneCount }} | Pending:
+      {{ pendingCount }}
     </div>
 
     <div class="filter-row">
-      <button type="button" @click="setFilter('all')" :class="{ active: activeFilter === 'all' }">
+      <button
+        type="button"
+        @click="setFilter('all')"
+        :class="{ active: activeFilter === 'all' }"
+      >
         All
       </button>
-      <button type="button" @click="setFilter('done')" :class="{ active: activeFilter === 'done' }">
+      <button
+        type="button"
+        @click="setFilter('done')"
+        :class="{ active: activeFilter === 'done' }"
+      >
         Done
       </button>
-      <button type="button" @click="setFilter('pending')" :class="{ active: activeFilter === 'pending' }">
+      <button
+        type="button"
+        @click="setFilter('pending')"
+        :class="{ active: activeFilter === 'pending' }"
+      >
         Pending
       </button>
     </div>
 
     <div class="util-row">
-      <button type="button" @click="clearAllDone()">
-        Clear All Done
-      </button>
+      <button type="button" @click="clearAllDone()">Clear All Done</button>
       <label class="field-label" for="priority-select">Filter Priority: </label>
       <select id="priority-select" v-model="selectedPriorityFilter">
         <option value="all">All</option>
@@ -264,7 +281,9 @@ function clearAllDone() {
     <!-- TODO 10: Show this message only when the task list is empty -->
     <p v-if="tasks.length === 0" class="empty">No tasks yet. Add one above!</p>
 
-    <p v-if="filteredTasks.length === 0 && tasks.length !== 0" class="empty">No tasks yet for {{ selectedPriorityFilter }} priority.</p>
+    <p v-if="filteredTasks.length === 0 && tasks.length !== 0" class="empty">
+      No tasks yet for {{ selectedPriorityFilter }} priority.
+    </p>
 
     <!-- TODO 11: Render the task list using v-for -->
     <!-- Each item needs: checkbox (v-model), task name (:class done), remove button -->
@@ -272,14 +291,15 @@ function clearAllDone() {
       <!-- your v-for loop here -->
       <li v-for="task in filteredTasks" :key="task.id" class="task-item">
         <input type="checkbox" v-model="task.done" />
-        <span class="task-name" :class="{ done: task.done }">{{ task.name }}</span>
+        <span class="task-name" :class="{ done: task.done }">{{
+          task.name
+        }}</span>
 
         <span class="priority-badge" :class="task.priority">
           {{ task.priority }}
         </span>
         <button type="button" @click="removeTask(task.id)">X</button>
       </li>
-      
     </ul>
   </div>
 </template>
@@ -292,10 +312,13 @@ function clearAllDone() {
   padding: 24px;
   background: #f9fafb;
   border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-h1 { color: #1B2A4A; margin-bottom: 20px; }
+h1 {
+  color: #1b2a4a;
+  margin-bottom: 20px;
+}
 
 .input-row {
   display: flex;
@@ -313,7 +336,7 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 
 .input-row button {
   padding: 8px 16px;
-  background: #42B883;
+  background: #42b883;
   color: white;
   border: none;
   border-radius: 6px;
@@ -323,7 +346,7 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 
 .input-row select {
   padding: 8px 12px;
-  border: 1px solid #42B883;
+  border: 1px solid #42b883;
   border-radius: 10px;
   background: white;
 }
@@ -357,12 +380,15 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
   width: 100%;
   padding: 8px 16px;
   background: white;
-  color: #42B883;
-  border: 1px solid #42B883;
+  color: #42b883;
+  border: 1px solid #42b883;
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
-  transition: background .15s, color .15s, filter .15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    filter 0.15s;
 }
 
 .filter-row button:hover,
@@ -372,9 +398,9 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 }
 
 .filter-row button.active {
-  background: #42B883;
+  background: #42b883;
   color: white;
-  border-color: #42B883;
+  border-color: #42b883;
 }
 
 .filter-row button.active:hover,
@@ -393,13 +419,16 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 .util-row button {
   width: auto;
   padding: 8px 16px;
-  background: #42B883;
+  background: #42b883;
   color: white;
-  border: 1px solid #42B883;
+  border: 1px solid #42b883;
   border-radius: 10px;
   cursor: pointer;
   font-weight: bold;
-  transition: background .15s, color .15s, filter .15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    filter 0.15s;
 }
 
 .util-row button:hover,
@@ -420,7 +449,7 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 .util-row select {
   flex: 1;
   padding: 8px 12px;
-  border: 1px solid #42B883;
+  border: 1px solid #42b883;
   border-radius: 10px;
   background: white;
 }
@@ -449,7 +478,7 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
   border: 1px solid #eee;
 }
 
-.task-list li input{
+.task-list li input {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -524,5 +553,4 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
   background: #efefef;
   color: #373737;
 }
-
 </style>
