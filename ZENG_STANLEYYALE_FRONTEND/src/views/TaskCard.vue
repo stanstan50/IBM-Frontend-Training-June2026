@@ -65,48 +65,91 @@ HINTS (read only if stuck)
 //          but you DO need to call them)
 
 // TODO 2: Define the task prop with type Object, required: true
+export type Priority = "none" | "low" | "medium" | "high";
+
 export interface Task {
-  id: number,
-  name: string, 
-  done: boolean,
-  dueDate: number
+  id: number;
+  name: string;
+  done: boolean;
+  dueDate: number;
+  priority: Priority;
 }
-// const props = defineProps({ ... })
+
 const props = defineProps<{
-  task: Task
-}>()
+  task: Task;
+}>();
 
 // TODO 3: Define emits for 'complete' and 'delete'
-// const emit = defineEmits([...])
-const emit = defineEmits(['complete', 'delete'])
+const emit = defineEmits(["complete", "delete", "update"]);
+
+// Extension: Editing task name
+import { ref } from "vue";
+
+const isEdit = ref<boolean>(false);
+const editedName = ref<string>("");
+
+// Enable edit on task card
+function startEdit() {
+  isEdit.value = true;
+  editedName.value = props.task.name;
+}
+
+function saveEdit() {
+  isEdit.value = false;
+  if (
+    editedName.value.trim().length === 0 ||
+    editedName.value.trim() === props.task.name
+  )
+    return;
+
+  emit("update", props.task.id, editedName.value.trim());
+  editedName.value = "";
+}
 </script>
 
 <template>
   <!-- TODO 4: Wrap everything in a div with class "task-card"
                Add :class="{ completed: task.done }" to the wrapper div -->
   <div class="task-card" :class="{ completed: task.done }">
-
     <div class="task-header">
       <!-- TODO 5: Display the task name -->
-       <span class="name">{{  task.name  }}</span>
+      <!-- Allow editing through v-if toggle -->
+      <span v-if="!isEdit" class="name" @click="startEdit">
+        {{ task.name }}
+      </span>
+      <input
+        v-if="isEdit"
+        v-model="editedName"
+        type="text"
+        name="edit-field"
+        @keyup.enter="saveEdit"
+        @blur="saveEdit"
+      />
+
+      <span class="priority-badge" :class="task.priority">{{
+        task.priority
+      }}</span>
 
       <!-- TODO 6: Add the named slot for metadata -->
-       <span class="meta">
-         <slot name="meta">
-            
-         </slot>
-       </span>
+      <span class="meta">
+        <slot name="meta"> </slot>
+      </span>
     </div>
 
     <div class="task-actions">
       <!-- TODO 7: Add Complete/Undo button — text changes based on task.done -->
-      <!--         @click should emit 'complete' with task.id as payload -->
-      <button type="button" class="btn-complete" @click="emit('complete', task.id)">
-        {{ task.done ? 'Undo' : 'Complete' }}
+      <button
+        type="button"
+        class="btn-complete"
+        @click="emit('complete', task.id)"
+      >
+        {{ task.done ? "Undo" : "Complete" }}
       </button>
 
       <!-- TODO 8: Add Delete button — emits 'delete' with task.id -->
-      <button type="button" class="btn-delete" @click="emit('delete', task.id)">Delete</button>
+      <button type="button" class="btn-delete" @click="emit('delete', task.id)">
+        Delete
+      </button>
     </div>
   </div>
 </template>
@@ -127,14 +170,15 @@ const emit = defineEmits(['complete', 'delete'])
 }
 .task-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  /* justify-content: flex-end; */
+  /* align-items: self-end; */
   margin-bottom: 10px;
 }
 .task-header span.name {
+  margin-right: auto;
   font-weight: 600;
   font-size: 15px;
-  color: #1B2A4A;
+  color: #1b2a4a;
 }
 .task-header .meta {
   font-size: 12px;
@@ -146,7 +190,7 @@ const emit = defineEmits(['complete', 'delete'])
 }
 .btn-complete {
   padding: 5px 14px;
-  background: #42B883;
+  background: #42b883;
   color: white;
   border: none;
   border-radius: 6px;
@@ -161,5 +205,40 @@ const emit = defineEmits(['complete', 'delete'])
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
+}
+.priority-badge {
+  margin: auto;
+  margin-left: clamp(5px, 1vw, 50px);
+  margin-right: clamp(5px, 1vw, 50px);
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.priority-badge.low {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.priority-badge.medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priority-badge.high {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.priority-badge.none {
+  background: #efefef;
+  color: #373737;
 }
 </style>

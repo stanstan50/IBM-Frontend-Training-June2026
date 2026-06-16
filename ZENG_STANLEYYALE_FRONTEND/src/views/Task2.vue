@@ -5,47 +5,58 @@
 =============================================================
 -->
 <script setup lang="ts">
-import { ref } from 'vue'
-import TaskCard from './TaskCard.vue'
-import type { Task } from './TaskCard.vue'
+import { ref } from "vue";
+import TaskCard from "./TaskCard.vue";
+import type { Task } from "./TaskCard.vue";
 
 // TODO 1: Create a ref() tasks array with at least 3 sample tasks
 // Each task: { id, name, done, dueDate }
-const tasks = ref<Task[]>([])
+const tasks = ref<Task[]>([]);
 
 tasks.value = [
-    {
+  {
     id: 1,
-    name: 'Task 1',
+    name: "Task 1",
     done: false,
-    dueDate: Date.now()
+    dueDate: Date.now(),
+    priority: 'none'
   },
   {
     id: 2,
-    name: 'Task 2',
+    name: "Task 2",
     done: false,
-    dueDate: Date.now()
+    dueDate: Date.now(),
+    priority: 'low'
   },
   {
     id: 3,
-    name: 'Task 3',
+    name: "Task 3",
     done: false,
-    dueDate: Date.now()
-  }
-]
+    dueDate: Date.now(),
+    priority: 'high'
+  },
+];
 
 // TODO 2: Write handleComplete(id) — toggle the done state of the task with this id
 function handleComplete(id: number) {
-    const task = tasks.value.find(task => task.id === id)
-    if (!task) return
+  const task = tasks.value.find((task) => task.id === id);
+  if (!task) return;
 
-    task.done = !task.done
+  task.done = !task.done;
 }
 
 // TODO 3: Write handleDelete(id) — remove the task with this id from the array
 function handleDelete(id: number) {
-  tasks.value = tasks.value.filter(task => task.id !== id)
+  tasks.value = tasks.value.filter((task) => task.id !== id);
 }
+
+// Extended - Task name editing
+function handleUpdate(id: number, name: string) {
+  const task = tasks.value.find(task => task.id === id)
+  if (!task) return;
+  task.name = name;
+}
+
 </script>
 
 <template>
@@ -64,11 +75,15 @@ function handleDelete(id: number) {
       :task="task"
       @complete="handleComplete"
       @delete="handleDelete"
+      @update="handleUpdate"
     >
-      <template #meta>Due: {{ new Date(task.dueDate).toLocaleDateString() }}
+      <template #meta
+        >Due: {{ new Date(task.dueDate).toLocaleDateString() }}
       </template>
     </TaskCard>
-    <span v-if="tasks.length === 0">No tasks remaining (either all done or deleted)</span>
+    <span v-if="tasks.length === 0"
+      >No tasks remaining (all done or deleted)</span
+    >
   </div>
 </template>
 
@@ -79,8 +94,9 @@ function handleDelete(id: number) {
   padding: 24px;
   font-family: Arial, sans-serif;
 }
-.task-list-view span {
-    
+
+h1 {
+  color: #1b2a4a;
+  margin-bottom: 24px;
 }
-h1 { color: #1B2A4A; margin-bottom: 24px; }
 </style>
