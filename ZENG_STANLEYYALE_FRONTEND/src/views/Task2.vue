@@ -62,8 +62,8 @@ function handleDelete(id: number) {
       v-for="task in tasks"
       :key="task.id"
       :task="task"
-      @complete="handleComplete(task.id)"
-      @delete="handleDelete(task.id)"
+      @complete="handleComplete"
+      @delete="handleDelete"
     >
       <template #meta>Due: {{ new Date(task.dueDate).toLocaleDateString() }}
       </template>
