@@ -216,7 +216,7 @@ function clearAllDone() {
     <!-- TODO 8: Add an "Add Task" button with @click="addTask" -->
     <div class="input-row">
       <!-- your input and button here -->
-      <input v-model="newTaskName" @keyup.enter="addTask" placeholder="Enter a new task name">
+      <input id="new-task-name-field" type="text" v-model="newTaskName" @keyup.enter="addTask" placeholder="Enter a new task name">
 
       <label class="field-label" for="new-priority-select">Priority: </label>
       <select id="new-priority-select" v-model="newTaskPriority">
@@ -264,7 +264,7 @@ function clearAllDone() {
     <!-- TODO 10: Show this message only when the task list is empty -->
     <p v-if="tasks.length === 0" class="empty">No tasks yet. Add one above!</p>
 
-    <p v-if="filteredTasks.length === 0" class="empty">No tasks yet for {{ selectedPriorityFilter }} priority.</p>
+    <p v-if="filteredTasks.length === 0 && tasks.length !== 0" class="empty">No tasks yet for {{ selectedPriorityFilter }} priority.</p>
 
     <!-- TODO 11: Render the task list using v-for -->
     <!-- Each item needs: checkbox (v-model), task name (:class done), remove button -->
