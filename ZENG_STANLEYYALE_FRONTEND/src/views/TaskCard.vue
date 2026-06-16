@@ -106,7 +106,7 @@ const emit = defineEmits(['complete', 'delete'])
       </button>
 
       <!-- TODO 8: Add Delete button — emits 'delete' with task.id -->
-      <button type="button" class="btn-delete" @click="emit('delete')">Delete</button>
+      <button type="button" class="btn-delete" @click="emit('delete', task.id)">Delete</button>
     </div>
   </div>
 </template>
