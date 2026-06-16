@@ -85,6 +85,23 @@ const pendingCount = computed(() => {
     return getTaskCounts().pendingCount
 })
 
+// === Extended ===
+// Filtering
+type Filter = 'all' | 'done' | 'pending'
+
+const activeFilter = ref<Filter>('all')
+
+const filteredTasks = computed(() => {
+    switch (activeFilter.value) {
+      case 'done': 
+        return tasks.value.filter(task => task.done)
+      case 'pending': 
+        return tasks.value.filter(task => !task.done)
+      default: 
+        return tasks.value
+    }
+})
+
 // Helper function to get task counts
 function getTaskCounts() {
     const totalCount : number = tasks.value.length;
@@ -100,6 +117,11 @@ function getTaskCounts() {
         doneCount: doneCnt,
         pendingCount: (totalCount - doneCnt)
     }
+}
+
+// Function to change filter state
+function setFilter(filter : Filter) {
+    activeFilter.value = filter
 }
 
 // TODO 4: Write the addTask() function
@@ -152,13 +174,25 @@ function removeTask(id: string) {
     <div class="input-row">
       <!-- your input and button here -->
       <input v-model="newTaskName" @keyup.enter="addTask" placeholder="Enter a new task name">
-      <button @click="addTask">Add Task</button>
+      <button type="button" @click="addTask">Add Task</button>
     </div>
 
     <!-- TODO 9: Display the stats bar using your computed values -->
     <!-- Format: Total: X | Done: X | Pending: X -->
     <div class="stats">
       Total: {{ totalCount }} | Done: {{ doneCount }} | Pending: {{ pendingCount }}
+    </div>
+
+    <div class="filter-row">
+      <button type="button" @click="setFilter('all')" :class="{ active: activeFilter === 'all' }">
+        All
+      </button>
+      <button type="button" @click="setFilter('done')" :class="{ active: activeFilter === 'done' }">
+        Done
+      </button>
+      <button type="button" @click="setFilter('pending')" :class="{ active: activeFilter === 'pending' }">
+        Pending
+      </button>
     </div>
 
     <!-- TODO 10: Show this message only when the task list is empty -->
@@ -168,10 +202,10 @@ function removeTask(id: string) {
     <!-- Each item needs: checkbox (v-model), task name (:class done), remove button -->
     <ul class="task-list">
       <!-- your v-for loop here -->
-      <li v-for="task in tasks" :key="task.id" :class="{ done: task.done }">
+      <li v-for="task in filteredTasks" :key="task.id">
         <input type="checkbox" v-model="task.done" />
-        {{ task.name }}
-        <button @click="removeTask(task.id)">X</button>
+        <span :class="{ done: task.done }">{{ task.name }}</span>
+        <button type="button" @click="removeTask(task.id)">X</button>
       </li>
       
     </ul>
@@ -224,6 +258,43 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
   border-radius: 6px;
 }
 
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filter-row button {
+  width: 100%;
+  padding: 8px 16px;
+  background: white;
+  color: #42B883;
+  border: 1px solid #42B883;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background .15s, color .15s, filter .15s;
+}
+
+.filter-row button:hover,
+.filter-row button:focus {
+  background: rgba(66, 184, 131, 0.08);
+  outline: none;
+}
+
+.filter-row button.active {
+  background: #42B883;
+  color: white;
+  border-color: #42B883;
+}
+
+.filter-row button.active:hover,
+.filter-row button.active:focus {
+  filter: brightness(0.95);
+}
+
 .empty {
   text-align: center;
   color: #aaa;
@@ -238,6 +309,17 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 }
 
 .task-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  border: 1px solid #eee;
+}
+
+.task-list li input{
   display: flex;
   align-items: center;
   gap: 10px;
