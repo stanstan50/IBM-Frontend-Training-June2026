@@ -384,14 +384,14 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 
 .util-row {
   display: flex;
-  /* grid-template-columns: repeat(2, 1fr); */
+  width: 100%;
   align-items: center;
   gap: 8px;
   margin-bottom: 16px;
 }
 
 .util-row button {
-  width: 100%;
+  width: auto;
   padding: 8px 16px;
   background: #42B883;
   color: white;
@@ -409,6 +409,7 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 }
 
 .util-row .field-label {
+  margin-left: auto;
   display: block;
   margin-bottom: 6px;
   font-size: 13px;
@@ -417,6 +418,7 @@ h1 { color: #1B2A4A; margin-bottom: 20px; }
 }
 
 .util-row select {
+  flex: 1;
   padding: 8px 12px;
   border: 1px solid #42B883;
   border-radius: 10px;
