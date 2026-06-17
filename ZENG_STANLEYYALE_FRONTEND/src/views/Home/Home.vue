@@ -1,15 +1,13 @@
 <template>
-    <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/task1">Task 1</RouterLink>
-        <RouterLink to="/task2">Task 2</RouterLink>
-    </nav>
-    
+  <nav>
+    <RouterLink to="/">Home</RouterLink>
+    <RouterLink to="/task1">Task 1</RouterLink>
+    <RouterLink to="/task2">Task 2</RouterLink>
+    <RouterLink to="/task3">Task 3</RouterLink>
+  </nav>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 nav {
