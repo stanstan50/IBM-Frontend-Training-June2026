@@ -8,9 +8,7 @@
     <RouterLink to="/task1">Task 1</RouterLink>
     <RouterLink to="/task2">Task 2</RouterLink>
     <RouterLink to="/task3">Task 3</RouterLink>
-    <!-- <RouterLink :to="{ name: 'tasks', params: { id: 1 } }">Task 1</RouterLink>
-    <RouterLink :to="{ name: 'tasks', params: { id: 2 } }">Task 2</RouterLink>
-    <RouterLink :to="{ name: 'tasks', params: { id: 3 } }">Task 3</RouterLink> -->
+    <RouterLink to="/task4">Task 4</RouterLink>
   </nav>
   <RouterView />
   <!-- <HelloWorld /> -->

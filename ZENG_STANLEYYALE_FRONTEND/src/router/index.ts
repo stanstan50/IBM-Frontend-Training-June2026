@@ -55,19 +55,19 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // TODO 1: Import your view components
-import HomeView       from '@/views/HomeView.vue'
-import TaskDetailView from '@/views/TaskDetailView.vue'
-import AboutView      from '@/views/AboutView.vue'
+import HomeView from "@/views/HomeView.vue";
+import TaskDetailView from "@/views/TaskDetailView.vue";
+import AboutView from "@/views/AboutView.vue";
 
 // TODO 2: Import your Pinia task store so the guard can check if a task exists
-import { useTaskStore } from '@/stores/taskStore'
+import { useTaskStore } from "@/stores/taskStore";
 
 const routes = [
   // TODO 3: Add a redirect from '/' to '/home'
   // { path: '/', redirect: '/home' },
   {
     path: "/",
-    redirect: '/home'
+    redirect: "/home",
   },
 
   // TODO 4: Add the /home route
@@ -85,15 +85,14 @@ const routes = [
     path: "/task/:id",
     name: "taskdetail",
     component: TaskDetailView,
-    meta: { requiresTask: true }
+    meta: { requiresTask: true },
   },
-  
 
   // TODO 6: Add the /about route
   // { path: '/about', component: AboutView },
   {
-    path: '/about',
-    component: AboutView
+    path: "/about",
+    component: AboutView,
   },
   {
     path: "/task1",
@@ -111,7 +110,13 @@ const routes = [
     path: "/task3",
     name: "task3",
     // lazy-loaded: this chunk only downloads when the route is visited
-    component: () => import("../views/HomeView.vue"),
+    component: () => import("../views/Task3.vue"),
+  },
+  {
+    path: "/task4",
+    name: "task4",
+    // lazy-loaded: this chunk only downloads when the route is visited
+    component: () => import("../views/Task4.vue"),
   },
 ];
 
@@ -129,14 +134,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // your guard logic here
   if (to.meta.requiresTask) {
-    const taskStore = useTaskStore()
+    const taskStore = useTaskStore();
 
-    const task = taskStore.tasks.find(t => t.id === Number(to.params.id))
+    const task = taskStore.tasks.find((t) => t.id === Number(to.params.id));
     if (!task) {
       return next({
-        path: '/home',
-        query: { error: 'notfound' }
-      })
+        path: "/home",
+        query: { error: "notfound" },
+      });
     }
   }
 
