@@ -31,6 +31,8 @@ function handleAdd() {
   }
 
   addTask(newTaskName.value);
+
+  newTaskName.value = '';
 }
 </script>
 
@@ -51,7 +53,7 @@ function handleAdd() {
     <!-- TODO 7: Render the task list using tasks from the store -->
     <ul class="task-list">
       <!-- v-for task in tasks -->
-      <!--   checkbox v-model="task.done" @change="toggleTask(task.id)" -->
+      <!--   checkbox @change="toggleTask(task.id)" -->
       <!--   span :class done -->
       <!--   remove button @click="removeTask(task.id)" -->
       <li v-for="task in tasks" :key="task.id">
@@ -60,6 +62,8 @@ function handleAdd() {
         <button type="button" class="remove" @click="removeTask(task.id)">X</button>
       </li>
     </ul>
+
+    <p v-if="tasks.length === 0" class="empty">No tasks yet. Add one above!</p>
   </div>
 </template>
 
