@@ -148,4 +148,6 @@ export const useTaskStore = defineStore("tasks", () => {
     toggleTask,
     removeTask,
   };
+}, {
+  persist: true
 });

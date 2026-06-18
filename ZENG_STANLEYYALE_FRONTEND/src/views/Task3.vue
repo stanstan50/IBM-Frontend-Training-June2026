@@ -1,4 +1,5 @@
 <template>
+  <p>Note: Initial Array Overridden By Task 4</p>
   <HomeView/>
 </template>
 
