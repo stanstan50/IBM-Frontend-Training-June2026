@@ -33,6 +33,7 @@ function handleLogin() {
     <RouterLink to="/task2">Task 2</RouterLink>
     <RouterLink to="/task3">Task 3</RouterLink>
     <RouterLink to="/task4">Task 4</RouterLink>
+    <RouterLink to="/task5">Task 5</RouterLink>
   </nav>
   <div v-if="!isLoggedIn" class="input-row">
     <input

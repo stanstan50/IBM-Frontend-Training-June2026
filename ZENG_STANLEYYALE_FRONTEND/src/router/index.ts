@@ -118,6 +118,12 @@ const routes = [
     // lazy-loaded: this chunk only downloads when the route is visited
     component: () => import("../views/Task4.vue"),
   },
+  {
+    path: "/task5",
+    name: "task5",
+    // lazy-loaded: this chunk only downloads when the route is visited
+    component: () => import("../views/Task5.vue"),
+  },
 ];
 
 const router = createRouter({
