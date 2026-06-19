@@ -65,21 +65,22 @@ function setFilter(selectedFilter: Filter) {
     <span v-if="loading" class="loading">Your list is loading...</span>
     <!-- TODO 4: Show an error message if error has a value -->
     <div v-if="error" class="error-box">Error: {{ error }}</div>
-    <!-- TODO 5: Show the content block when NOT loading and NO error -->
 
     <!-- A "Retry" button that re-fetches when the request fails -->
     <button v-if="error" type="button" class="retry-button" @click="refetch">Retry</button>
 
-    <div>
+    <!-- TODO 5: Show the content block when NOT loading and NO error -->
+
+    <div v-if="!loading && !error">
       <!-- Filter buttons -->
-      <div v-if="!loading && !error" class="filters">
+      <div class="filters">
         <!-- TODO 6: Three buttons — All, Done, Pending -->
         <!-- Each sets filter.value and gets :class="{ active: filter === '...' }" -->
         <button type="button" :class="{ active: filter === 'all'}" @click="setFilter('all')">All</button>
         <button type="button" :class="{ active: filter === 'done'}" @click="setFilter('done')">Done</button>
         <button type="button" :class="{ active: filter === 'pending'}" @click="setFilter('pending')">Pending</button>
       </div>
-      <div v-if="!loading && !error" class="filters">
+      <div class="filters">
         <!--  Search by title filter -->
         <input type="text" v-model="titleFilter" placeholder="Enter title...">
       </div>
@@ -94,7 +95,7 @@ function setFilter(selectedFilter: Filter) {
       </ul>
 
       <!-- TODO 8: Show count of visible items -->
-      <span v-if="!loading && !error" class="count">{{ `Number of visible items: ${filteredTodos.length}` }}</span>
+      <span class="count">{{ `Number of visible items: ${filteredTodos.length}` }}</span>
     </div>
   </div>
 </template>
