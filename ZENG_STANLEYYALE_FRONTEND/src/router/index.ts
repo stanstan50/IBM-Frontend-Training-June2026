@@ -124,6 +124,12 @@ const routes = [
     // lazy-loaded: this chunk only downloads when the route is visited
     component: () => import("../views/Task5.vue"),
   },
+  {
+    path: "/task5-users",
+    name: "task5-users",
+    // lazy-loaded: this chunk only downloads when the route is visited
+    component: () => import("../views/UsersView.vue"),
+  },
 ];
 
 const router = createRouter({
