@@ -21,7 +21,7 @@ const filter = ref<Filter>('done') // 'all' | 'done' | 'pending'
 
 // TODO 1: Call useFetch with the JSONPlaceholder todos endpoint
 // Rename 'data' to 'todos' using destructuring alias syntax
-const { data: todos, loading, error } = useFetch<Todo[]>('https://jsonplaceholder.typicode.com/todos')
+const { data: todos, loading, error, refetch } = useFetch<Todo[]>('https://jsonplaceholder.typicode.com/todos')
 
 
 // TODO 2: Create a filteredTodos computed() that:
@@ -50,6 +50,10 @@ function setFilter(selectedFilter: Filter) {
     <!-- TODO 4: Show an error message if error has a value -->
     <div v-if="error" class="error-box">Error: {{ error }}</div>
     <!-- TODO 5: Show the content block when NOT loading and NO error -->
+
+    <!-- A "Retry" button that re-fetches when the request fails -->
+    <button v-if="error" type="button" class="retry-button" @click="refetch">Retry</button>
+
     <div>
       <!-- Filter buttons -->
       <div v-if="!loading && !error" class="filters">
@@ -81,6 +85,7 @@ h1 { color: #1B2A4A; margin-bottom: 4px; }
 .subtitle { color: #9ca3af; font-size: 13px; margin-bottom: 20px; }
 .loading { text-align: center; padding: 48px; color: #42B883; font-size: 16px; }
 .error-box { background: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px; padding: 16px; color: #dc2626; }
+.retry-button { padding: 6px 16px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; }
 .filters { display: flex; gap: 8px; margin-bottom: 16px; }
 .filters button { padding: 6px 16px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; }
 .filters button.active { background: #42B883; color: white; border-color: #42B883; }

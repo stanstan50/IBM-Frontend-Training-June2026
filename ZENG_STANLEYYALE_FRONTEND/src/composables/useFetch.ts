@@ -71,15 +71,16 @@ export function useFetch<T>(url: string) {
   const loading = ref<boolean>(true)
   const error   = ref<string | null>(null)
 
-  // TODO 3: Use onMounted with an async callback to fetch the data
-  onMounted(async () => {
+  async function refetch() {
     try {
+      loading.value = true;
       // TODO 4: fetch the url, check response.ok, parse JSON into data.value
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP: ${response.status}`);
       }
       data.value = (await response.json()) as T;
+      error.value = null;
     } catch (e) {
       // TODO 5: assign the error message to error.value
       error.value = e instanceof Error ? e.message : "Something went wrong.";
@@ -87,8 +88,11 @@ export function useFetch<T>(url: string) {
       // TODO 6: set loading.value = false
       loading.value = false
     }
-  })
+  }
+
+  // TODO 3: Use onMounted with an async callback to fetch the data
+  onMounted(refetch)
 
   // TODO 7: Return the three refs
-  return { data, loading, error }
+  return { data, loading, error, refetch }
 }
