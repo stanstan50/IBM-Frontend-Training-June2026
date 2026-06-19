@@ -18,6 +18,7 @@ interface Todo {
 type Filter = 'all' | 'done' | 'pending'
 
 const filter = ref<Filter>('done') // 'all' | 'done' | 'pending'
+const titleFilter = ref<string>('')
 
 // TODO 1: Call useFetch with the JSONPlaceholder todos endpoint
 // Rename 'data' to 'todos' using destructuring alias syntax
@@ -29,10 +30,25 @@ const { data: todos, loading, error, refetch } = useFetch<Todo[]>('https://jsonp
 //  - Filters by filter.value ('all' shows first 20, 'done' shows completed, 'pending' shows incomplete)
 const filteredTodos = computed(() => {
   if (!todos.value) return [] // still loading
-  if (filter.value === 'all') return todos.value.slice(0, 20)
-  if (filter.value === 'done') return todos.value.filter(todo => todo.completed)
-  if (filter.value === 'pending') return todos.value.filter(todo => !todo.completed)
-  return []
+  let newTodos: Todo[] = [];
+
+  switch (filter.value) {
+    case 'all':
+      newTodos = todos.value.slice(0, 20)
+      break
+    case 'done':
+      newTodos = todos.value.filter(todo => todo.completed)
+      break
+    case 'pending':
+      newTodos = todos.value.filter(todo => !todo.completed)
+      break
+    default:
+      newTodos = todos.value
+  }
+
+  newTodos = newTodos.filter(todo => todo.title.includes(titleFilter.value));
+  
+  return newTodos;
 })
 
 function setFilter(selectedFilter: Filter) {
@@ -63,6 +79,10 @@ function setFilter(selectedFilter: Filter) {
         <button type="button" :class="{ active: filter === 'done'}" @click="setFilter('done')">Done</button>
         <button type="button" :class="{ active: filter === 'pending'}" @click="setFilter('pending')">Pending</button>
       </div>
+      <div v-if="!loading && !error" class="filters">
+        <!--  Search by title filter -->
+        <input type="text" v-model="titleFilter" placeholder="Enter title...">
+      </div>
 
       <!-- TODO 7: Render filteredTodos using v-for -->
       <ul class="todo-list">
@@ -89,6 +109,13 @@ h1 { color: #1B2A4A; margin-bottom: 4px; }
 .filters { display: flex; gap: 8px; margin-bottom: 16px; }
 .filters button { padding: 6px 16px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; }
 .filters button.active { background: #42B883; color: white; border-color: #42B883; }
+.filters input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
 .todo-list { list-style: none; padding: 0; margin: 0; }
 .todo-list li { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: white; border-radius: 6px; margin-bottom: 6px; border: 1px solid #eee; font-size: 14px; }
 .todo-list li.done-item { opacity: 0.6; }
